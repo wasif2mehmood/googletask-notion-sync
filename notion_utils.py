@@ -64,9 +64,20 @@ def add_task_to_database(database_id: str, task: dict):
 
     for existing_task in existing_tasks:
         if existing_task["properties"]["ID"]["rich_text"][0]["text"]["content"] == task.get('id', 'N/A'):
-            # print(f"Task '{task.get('title', 'N/A')}' with ID '{task.get('id', 'N/A')}' already exists. Skipping.")
-            return
+            # Update the existing task instead of skipping
+            properties = {
+                "Name": {"title": [{"type": "text", "text": {"content": task.get('title', 'N/A')}}]},
+                "ID": {"rich_text": [{"type": "text", "text": {"content": task.get('id', 'N/A')}}]},
+                "Status": {"rich_text": [{"type": "text", "text": {"content": task.get('status', 'N/A')}}]},
+                "Due": {"rich_text": [{"type": "text", "text": {"content": task.get('due', 'N/A')}}]},
+                "Completed": {"rich_text": [{"type": "text", "text": {"content": task.get('completed', 'N/A')}}]},
+                "Notes": {"rich_text": [{"type": "text", "text": {"content": task.get('notes', 'N/A')}}]},
+                "Links": {"rich_text": [{"type": "text", "text": {"content": task.get('links', 'N/A') if task.get('links') else 'N/A'}}]},
+                "TaskListID": {"rich_text": [{"type": "text", "text": {"content": task.get('id', 'N/A')}}]},
+            }
+            return notion.pages.update(page_id=existing_task["id"], properties=properties)
 
+    # If no existing task is found, create a new one
     properties = {
         "Name": {"title": [{"type": "text", "text": {"content": task.get('title', 'N/A')}}]},
         "ID": {"rich_text": [{"type": "text", "text": {"content": task.get('id', 'N/A')}}]},
@@ -78,7 +89,6 @@ def add_task_to_database(database_id: str, task: dict):
         "TaskListID": {"rich_text": [{"type": "text", "text": {"content": task.get('id', 'N/A')}}]},
     }
     return notion.pages.create(parent={"type": "database_id", "database_id": database_id}, properties=properties)
-
 # Function to add a task list to a database in Notion
 def add_tasklist_to_database(database_id: str, tasklist: dict):
     existing_tasklists = notion.databases.query(database_id=database_id).get("results")

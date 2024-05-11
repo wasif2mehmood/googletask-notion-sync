@@ -38,10 +38,14 @@ if __name__ == "__main__":
     creds = get_google_tasks_credentials()
     service = build("tasks", "v1", credentials=creds)
 
-    # Get all tasks from Google Tasks
-    items = get_google_tasks()
-    for item in items:
-        add_tasklist_to_database(tasklist_db["id"], item)
-        tasks = service.tasks().list(tasklist=item["id"], showCompleted=True, showHidden=True).execute().get('items', [])
-        for task in tasks:
-            add_task_to_database(tasks_db["id"], task)
+    while True:
+        # Get all tasks from Google Tasks
+        items = get_google_tasks()
+        for item in items:
+            add_tasklist_to_database(tasklist_db["id"], item)
+            tasks = service.tasks().list(tasklist=item["id"], showCompleted=True, showHidden=True).execute().get('items', [])
+            for task in tasks:
+                add_task_to_database(tasks_db["id"], task)
+        
+        # Wait for a while before checking for updates again
+        time.sleep(60)  # wait for 60 seconds
