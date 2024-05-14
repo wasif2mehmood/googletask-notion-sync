@@ -6,12 +6,12 @@ This Python script is used to create or update a database in Notion using the No
 
 1. Clone this repository to your local machine.
 2. Install the required Python packages by running `pip install -r requirements.txt`.
-3. Create a `.env` file in the root directory of the project and add your Notion integration token as `NOTION_TOKEN=<your-token>`. You can also add a `PARENT_PAGE_ID=<your-page-id>` to specify the parent page for the database in Notion.
+3. Create a `.env` file in the root directory of the project and add your Notion integration token as `NOTION_TOKEN=<your-token>` and `PARENT_PAGE_ID=<your-page-id>` to specify the parent page for the database in Notion.
 4. You need to setup Google Tasks API credentials. Follow the instructions [here](https://developers.google.com/tasks/firstapp) to create a `credentials.json` file. Place this file in the root directory of the project.
 
 ## Usage
 
-To run the script, use the command `python create_database.py`.
+To run the script, use the command `python main.py`.
 
 ## About token.json
 
